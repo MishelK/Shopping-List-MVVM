@@ -12,11 +12,11 @@ import com.example.shoppinglist.data.items.ShoppingItem
 interface ShoppingDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun upsert(shoppingItem: ShoppingItem)
+    suspend fun upsert(shoppingItem: ShoppingItem)
 
     @Delete
-    fun delete(shoppingItem: ShoppingItem)
+    suspend fun delete(shoppingItem: ShoppingItem)
 
     @Query("SELECT * FROM shopping_items")
-    fun getAllShoppingItems(): LiveData<List<ShoppingItem>>
+    fun getAllShoppingItems(): List<ShoppingItem>
 }
