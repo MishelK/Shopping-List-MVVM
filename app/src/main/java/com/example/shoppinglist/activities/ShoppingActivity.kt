@@ -6,31 +6,33 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.shoppinglist.adapters.ShoppingItemAdapter
 import com.example.shoppinglist.data.items.ShoppingItem
-import com.example.shoppinglist.data.repositories.ShoppingRepository
-import com.example.shoppinglist.data.repositories.db.ShoppingDatabase
 import com.example.shoppinglist.databinding.ActivityShoppingBinding
 import com.example.shoppinglist.dialogs.AddShoppingItemDialog
 import com.example.shoppinglist.viewmodels.ShoppingViewModel
 import com.example.shoppinglist.viewmodels.ShoppingViewModelFactory
+import org.kodein.di.android.kodein
+import org.kodein.di.KodeinAware
+import org.kodein.di.generic.instance
 
-class ShoppingActivity : AppCompatActivity() {
+class ShoppingActivity : AppCompatActivity(), KodeinAware {
+
+    override val kodein by kodein()
+    private val shoppingViewModelFactory: ShoppingViewModelFactory by instance()
 
     private lateinit var binding: ActivityShoppingBinding
+    private lateinit var shoppingViewModel: ShoppingViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityShoppingBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        shoppingViewModel = ViewModelProvider(this, shoppingViewModelFactory)[ShoppingViewModel::class.java]
 
-        val repository = ShoppingRepository(ShoppingDatabase(this))
-        val factory = ShoppingViewModelFactory(repository)
-        val viewModel = ViewModelProvider(this, factory)[ShoppingViewModel::class.java]
-
-        val shoppingItemAdapter = ShoppingItemAdapter(listOf(), viewModel)
+        val shoppingItemAdapter = ShoppingItemAdapter(listOf(), shoppingViewModel)
         binding.rvShoppingItems.layoutManager = LinearLayoutManager(this)
         binding.rvShoppingItems.adapter = shoppingItemAdapter
 
-        viewModel.getAllShoppingItemsLiveData().observe(this) {
+        shoppingViewModel.getAllShoppingItemsLiveData().observe(this) {
             shoppingItemAdapter.items = it
             shoppingItemAdapter.notifyDataSetChanged()
         }
@@ -38,7 +40,7 @@ class ShoppingActivity : AppCompatActivity() {
         binding.fab.setOnClickListener {
             AddShoppingItemDialog(this, object: AddShoppingItemDialog.Listener {
                 override fun onAddShoppingItem(shoppingItem: ShoppingItem) {
-                    viewModel.upsert(shoppingItem)
+                    shoppingViewModel.upsert(shoppingItem)
                 }
             }).show()
         }
