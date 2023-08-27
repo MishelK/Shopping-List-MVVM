@@ -1,4 +1,4 @@
-package com.example.shoppinglist.ui.viewmodels
+package com.example.shoppinglist.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

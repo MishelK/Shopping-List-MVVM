@@ -1,4 +1,4 @@
-package com.example.shoppinglist.ui.activities
+package com.example.shoppinglist.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.example.shoppinglist.R
 import com.example.shoppinglist.data.repositories.ShoppingRepository
 import com.example.shoppinglist.data.repositories.db.ShoppingDatabase
-import com.example.shoppinglist.ui.viewmodels.ShoppingViewModel
-import com.example.shoppinglist.ui.viewmodels.ShoppingViewModelFactory
+import com.example.shoppinglist.viewmodels.ShoppingViewModel
+import com.example.shoppinglist.viewmodels.ShoppingViewModelFactory
 
 class ShoppingActivity : AppCompatActivity() {
 
